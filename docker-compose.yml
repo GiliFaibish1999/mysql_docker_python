@@ -1,0 +1,59 @@
+version: '3.8'
+
+
+services:
+
+  mysql:
+    build: ./mysql/
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+      MYSQL_ROOT_HOST: '%'
+      DATADIR: '/etc/init.d/init.sql'
+    hostname: myubuntu
+    networks:
+      - local-net  
+    expose:
+      - '3306'
+    ports:
+      - 3306:3306
+
+  pythonapp:
+    build: ./python/
+    command: bash -c "python3 ./hello_world.py"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    networks:
+      - local-net
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+
+  pythonapp2:
+    build: ./python2/
+    command: bash -c "python3 ./hello_world.py"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    networks:
+      - local-net
+    ports:
+      - 8081:8081
+    depends_on:
+      - mysql
+
+  pythonapp3:
+    build: ./python3/
+    command: bash -c "python3 ./hello_world.py"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    networks:
+      - local-net
+    ports:
+      - 8082:8082
+    depends_on:
+      - mysql
+
+
+networks:
+  local-net:
+    driver: bridge
